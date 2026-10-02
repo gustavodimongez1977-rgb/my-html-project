@@ -1,80 +1,163 @@
-/* ==========================================================================
-   1. ШИРИНА И ВЫРАВНИВАНИЕ КОНТЕНТА
-   ========================================================================== */
+/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 body {
-  /* Контент занимает 70% ширины страницы */
-  width: 70%;
-  /* Контент выровнен по середине */
-  margin: 0 auto;
-  
-  /* Дополнительно: базовый шрифт для обычного текста */
-  font-family: Georgia, serif; 
-  line-height: 1.6;
-  padding: 40px 0;
+    font-family: Arial, sans-serif;
 }
 
-/* ==========================================================================
-   2. СТИЛИЗАЦИЯ ЗАГОЛОВКОВ
-   ========================================================================== */
-/* Заголовки всех уровней выполнены шрифтом без засечек */
-h1, h2, h3, h4, h5, h6 {
-  font-family: sans-serif;
-  /* Верхний отступ установлен больше нижнего для правила внутреннего и внешнего */
-  margin-top: 1.8em;
-  margin-bottom: 0.6em;
+/* Шапка сайта */
+.header {
+    position: relative;
+    height: 200px;
+    background: linear-gradient(to bottom, #1a365d, #2b6cb0);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-/* Заголовки первого уровня имеют размер 32px */
-h1 {
-  font-size: 32px;
-  margin-top: 0; /* Для самого первого заголовка убираем верхний отступ */
+/* Навигационная панель */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    position: relative;
+    z-index: 10; /* Меню строго поверх всего */
+}
+.logo img {
+    height: 50px;
+    display: block;
+}
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+.nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+.nav-links a:hover {
+    color: #90cdf4;
 }
 
-/* ==========================================================================
-   3. ОБТЕКАНИЕ КАРТИНОК И ПОДПИСИ
-   ========================================================================== */
-/* Картинки обтекаются текстом. Картинки справа, текст слева */
-figure {
-  float: right;
-  margin-left: 20px;   /* Отступ слева, чтобы текст не прилипал к картинке */
-  margin-bottom: 15px; /* Отступ снизу */
-  max-width: 40%;      /* Ограничиваем ширину контейнера с картинкой */
+/* Зона анимации */
+.animation-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px; /* Высота морской зоны */
+    z-index: 1;
 }
 
-figure img {
-  width: 100%;         /* Картинка подстраивается под размеры figure */
-  height: auto;
-  display: block;
+/* Контейнеровоз */
+/* Этот блок отвечает ТОЛЬКО за движение корабля слева направо */
+.ship-moving {
+    position: absolute;
+    bottom: 22px; /* Посадка в воду */
+    z-index: 3;
+    animation: sail 25s infinite linear;
 }
 
-/* Подписи под картинками выполнены курсивом */
-figcaption {
-  font-style: italic;
-  font-size: 0.9em;
-  margin-top: 5px;
-  text-align: center;
+/* Этот блок отвечает за размер, разворот носом вперед и ПОКАЧИВАНИЕ */
+.ship {
+    display: block;
+    width: 280px; 
+    /* запускаем покачивание */
+     
+    animation: rock 3.5s infinite ease-in-out;
 }
 
-/* Сброс обтекания для заголовков, чтобы они не налезали на картинки */
-h2, h3 {
-  clear: both;
+/* --- ОБНОВЛЕННЫЕ АНИМАЦИИ В КОНЦЕ ФАЙЛА --- */
+
+/* Чистая анимация движения вперед (без перезаписи трансформ) */
+@keyframes sail {
+    0% { left: -300px; }
+    100% { left: 100%; }
 }
 
-/* ==========================================================================
-   4. ТАБЛИЦЫ
-   ========================================================================== */
-/* Таблицы имеют непрерывные границы чёрного цвета толщиной 1px */
-table {
-  border-collapse: collapse; /* Объединяет двойные рамки в одну непрерывную */
-  width: 100%;
-  margin: 20px 0;
+/* Чистая анимация покачивания (теперь работает идеально!) */
+@keyframes rock {
+    0%, 100% { 
+        transform:  translateY(0) rotate(0deg); 
+    }
+    50% { 
+        transform:  translateY(-6px) rotate(2deg); /* Слегка приподнимается и наклоняется */
+    }
 }
 
-table, th, td {
-  border: 1px solid black;
+/* Базовые настройки для всех волн */
+.wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 80px;
+    background-repeat: repeat-x;
+    background-position: 0 bottom;
+    transform: translate3d(0, 0, 0);
 }
 
-th, td {
-  padding: 8px;
-  text-align: left;
+/* 1. Задняя волна (светлая, медленная) */
+.wave-back {
+    z-index: 1;
+    opacity: 0.4;
+    background-size: 50% 70px;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMjAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+PHBhdGggZD0nTTAsNjAgQzE1MCwyMCAzNTAsMTAwIDUwMCw2MCBDNjUwLDIwIDg1MCwxMDAgMTAwMCw2MCBDMTE1MCwyMCAxMzUwLDEwMCAxNTAwLDYwIEwxNTAwLDEyMCBMMCwxMjAgWicgZmlsbD0nIzAwNjZhYScvPjwvc3ZnPg==");
+    animation: wave-move 16s linear infinite reverse;
+}
+
+/* 2. Средняя волна (за кораблем) */
+.wave-middle {
+    z-index: 2;
+    opacity: 0.6;
+    background-size: 35% 75px;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMjAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+PHBhdGggZD0nTTAsNTAgQzEwMCw4MCAyNTAsMjAgNDAwLDUwIEM1NTAsODAgNzAwLDIwIDg1MCw1MCBDMTAwMCw4MCAxMTUwLDIwIDEzMDAsNTAgTDEzMDAsMTIwIEwwLDEyMCBaJyBmaWxsPScjMDA1NWFhJy8+PC9zdmc+");
+    animation: wave-move 10s linear infinite;
+}
+
+/* 3. Передняя волна (темная, поверх корабля) */
+.wave-front {
+    z-index: 4;
+    opacity: 0.8;
+    background-size: 50% 65px;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMjAwIDEyMCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+PHBhdGggZD0nTTAsNjAgQzE1MCwxMDAgMzUwLDIwIDUwMCw2MCBDNjUwLDEwMCA4NTAsMjAgMTAwMCw2MCBDMTE1MCwxMDAgMTM1MCwyMCAxNTAwLDYwIEwxNTAwLDEyMCBMMCwxMjAgWicgZmlsbD0nIzAwMzM2NicvPjwvc3ZnPg==");
+    animation: wave-move 6s linear infinite reverse;
+}
+
+/* --- АНИМАЦИИ --- */
+
+/* Движение корабля слева направо (носом вперед + качка) */
+@keyframes sail {
+    0% { 
+        left: -300px; 
+        transform: scaleX(-1) translateY(0) rotate(0deg); 
+    }
+    50% {
+        transform: scaleX(-1) translateY(-4px) rotate(1.5deg); 
+    }
+    100% { 
+        left: 100%; 
+        transform: scaleX(-1) translateY(0) rotate(0deg); 
+    }
+}
+
+/* Плавное смещение волн */
+@keyframes wave-move {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Основной контент страницы */
+.content {
+    padding: 40px;
+    text-align: center;
 }

@@ -1,4 +1,6 @@
-/* Общие стили */
+/* ==========================================================================
+   1. ОБЩИЕ СТИЛИ И СЕТКА
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -12,14 +14,17 @@ body {
 .header {
     position: relative;
     height: 200px;
-    background: linear-gradient(to bottom, #1a365d, #2b6cb0);
+    /* Основной глубокий ночной градиент фона */
+    background: linear-gradient(to bottom, #0b192f, #1a365d, #2b6cb0);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-/* Навигационная панель */
+/* ==========================================================================
+   2. НАВИГАЦИЯ И ПУЛЬСИРУЮЩИЙ ЛОГОТИП
+   ========================================================================== */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -31,6 +36,8 @@ body {
 .logo img {
     height: 50px;
     display: block;
+    /* Анимация пульсации логотипа */
+    animation: pulse 2s infinite ease-in-out;
 }
 .nav-links {
     list-style: none;
@@ -48,7 +55,9 @@ body {
     color: #90cdf4;
 }
 
-/* Зона анимации */
+/* ==========================================================================
+   3. АНИМАЦИОННЫЙ КОНТЕЙНЕР И ВОЛНЫ (Надежный Base64 формат)
+   ========================================================================== */
 .animation-container {
     position: absolute;
     bottom: 0;
@@ -56,42 +65,6 @@ body {
     width: 100%;
     height: 100px; /* Высота морской зоны */
     z-index: 1;
-}
-
-/* Контейнеровоз */
-/* Этот блок отвечает ТОЛЬКО за движение корабля слева направо */
-.ship-moving {
-    position: absolute;
-    bottom: 22px; /* Посадка в воду */
-    z-index: 3;
-    animation: sail 25s infinite linear;
-}
-
-/* Этот блок отвечает за размер, разворот носом вперед и ПОКАЧИВАНИЕ */
-.ship {
-    display: block;
-    width: 280px; 
-    /* запускаем покачивание */
-     
-    animation: rock 3.5s infinite ease-in-out;
-}
-
-/* --- ОБНОВЛЕННЫЕ АНИМАЦИИ В КОНЦЕ ФАЙЛА --- */
-
-/* Чистая анимация движения вперед (без перезаписи трансформ) */
-@keyframes sail {
-    0% { left: -300px; }
-    100% { left: 100%; }
-}
-
-/* Чистая анимация покачивания (теперь работает идеально!) */
-@keyframes rock {
-    0%, 100% { 
-        transform:  translateY(0) rotate(0deg); 
-    }
-    50% { 
-        transform:  translateY(-6px) rotate(2deg); /* Слегка приподнимается и наклоняется */
-    }
 }
 
 /* Базовые настройки для всех волн */
@@ -106,7 +79,7 @@ body {
     transform: translate3d(0, 0, 0);
 }
 
-/* 1. Задняя волна (светлая, медленная) */
+/* 1. Задняя волна (светлая, медленная, плывет назад) */
 .wave-back {
     z-index: 1;
     opacity: 0.4;
@@ -115,7 +88,7 @@ body {
     animation: wave-move 16s linear infinite reverse;
 }
 
-/* 2. Средняя волна (за кораблем) */
+/* 2. Средняя волна (за кораблем, средняя скорость, плывет вперед) */
 .wave-middle {
     z-index: 2;
     opacity: 0.6;
@@ -124,7 +97,7 @@ body {
     animation: wave-move 10s linear infinite;
 }
 
-/* 3. Передняя волна (темная, поверх корабля) */
+/* 3. Передняя волна (темная, быстрая, поверх корабля, плывет назад) */
 .wave-front {
     z-index: 4;
     opacity: 0.8;
@@ -133,31 +106,139 @@ body {
     animation: wave-move 6s linear infinite reverse;
 }
 
-/* --- АНИМАЦИИ --- */
+/* ==========================================================================
+   4. КОРАБЛЬ И ЕГО ПОЗИЦИОНИРОВАНИЕ
+   ========================================================================== */
+/* Слой движения вперед и высота над водой */
+.ship-moving {
+    position: absolute;
+    bottom: 22px; /* Приподнятая посадка над волнами */
+    z-index: 3; /* Четко между средней и передней волной */
+    animation: sail 25s infinite linear;
+}
 
-/* Движение корабля слева направо (носом вперед + качка) */
-@keyframes sail {
-    0% { 
-        left: -300px; 
-        transform: scaleX(-1) translateY(0) rotate(0deg); 
+/* Слой размера и качки корабля (развернут носом вперед) */
+.ship {
+    display: block;
+    width: 280px; /* Крупный размер */
+    animation: rock 3.5s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   5. ВСЕ КЛЮЧЕВЫЕ КАДРЫ АНИМАЦИЙ (KEYFRAMES)
+   ========================================================================== */
+
+/* 1. Пульсация логотипа */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
     }
     50% {
-        transform: scaleX(-1) translateY(-4px) rotate(1.5deg); 
-    }
-    100% { 
-        left: 100%; 
-        transform: scaleX(-1) translateY(0) rotate(0deg); 
+        transform: scale(1.08);
     }
 }
 
-/* Плавное смещение волн */
+/* 2. Движение волн из стороны в сторону */
 @keyframes wave-move {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
 
-/* Основной контент страницы */
+/* 3. Чистое движение корабля вперед (слева направо) */
+@keyframes sail {
+    0% { left: -300px; }
+    100% { left: 100%; }
+}
+
+/* 4. Чистая плавная качка корабля на волнах */
+@keyframes rock {
+    0%, 100% { 
+        transform: scaleX(-1) translateY(0) rotate(0deg); 
+    }
+    50% { 
+        transform: scaleX(-1) translateY(-6px) rotate(2deg); 
+    }
+}
+
+/* ==========================================================================
+   6. ОСНОВНОЙ КОНТЕНТ СТРАНИЦЫ
+   ========================================================================== */
 .content {
     padding: 40px;
     text-align: center;
+}
+
+/* ==========================================================================
+   НЕБО И АСИНХРОННО МЕРЦАЮЩИЕ ЗВЁЗДЫ
+   ========================================================================== */
+
+/* Общие базовые стили для всех слоев звезд */
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 130px; /* Область неба над волнами */
+    pointer-events: none; /* Звёзды прозрачны для кликов мыши */
+    background-repeat: repeat;
+}
+
+/* Слой 1: Маленькие звёздочки, мерцают быстро (каждые 2.5 сек) */
+.stars-layer1 {
+    z-index: 2;
+    background-size: 450px 130px;
+    background-image: 
+        radial-gradient(1px 1px at 25px 20px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.2px 1.2px at 140px 75px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 280px 15px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 390px 60px, #ffffff, rgba(0,0,0,0));
+    animation: twinkle-fast 2.5s infinite ease-in-out;
+}
+
+/* Слой 2: Средние звёзды, мерцают умеренно и со смещением по времени */
+.stars-layer2 {
+    z-index: 3;
+    background-size: 550px 130px;
+    background-image: 
+        radial-gradient(1.8px 1.8px at 70px 45px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 210px 10px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 340px 80px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 480px 35px, #ffffff, rgba(0,0,0,0));
+    /* Задержка в 1.2 секунды заставляет этот слой жить своей жизнью */
+    animation: twinkle-medium 4s infinite ease-in-out;
+    animation-delay: 1.2s;
+}
+
+/* Слой 3: Редкие крупные звёзды, мерцают медленно и глубоко */
+.stars-layer3 {
+    z-index: 4;
+    background-size: 650px 130px;
+    background-image: 
+        radial-gradient(2.2px 2.2px at 110px 85px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2.5px 2.5px at 310px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 520px 70px, #ffffff, rgba(0,0,0,0));
+    /* Задержка в 2.5 секунды */
+    animation: twinkle-slow 6s infinite ease-in-out;
+    animation-delay: 2.5s;
+}
+
+/* --- ТРИ РАЗНЫХ РЕЖИМА МЕРЦАНИЯ (Ключевые кадры) --- */
+
+/* 1. Быстрое мерцание */
+@keyframes twinkle-fast {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.9; }
+}
+
+/* 2. Среднее мерцание */
+@keyframes twinkle-medium {
+    0%, 100% { opacity: 0.3; }
+    40% { opacity: 1; }
+    70% { opacity: 0.1; } /* Дополнительная фаза затухания */
+}
+
+/* 3. Медленное глубокое мерцание */
+@keyframes twinkle-slow {
+    0%, 100% { opacity: 0.1; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1.02); }
 }
